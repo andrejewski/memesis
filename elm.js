@@ -6624,6 +6624,385 @@ return {
 
 }();
 
+var _elm_lang$core$Random$onSelfMsg = F3(
+	function (_p1, _p0, seed) {
+		return _elm_lang$core$Task$succeed(seed);
+	});
+var _elm_lang$core$Random$magicNum8 = 2147483562;
+var _elm_lang$core$Random$range = function (_p2) {
+	return {ctor: '_Tuple2', _0: 0, _1: _elm_lang$core$Random$magicNum8};
+};
+var _elm_lang$core$Random$magicNum7 = 2147483399;
+var _elm_lang$core$Random$magicNum6 = 2147483563;
+var _elm_lang$core$Random$magicNum5 = 3791;
+var _elm_lang$core$Random$magicNum4 = 40692;
+var _elm_lang$core$Random$magicNum3 = 52774;
+var _elm_lang$core$Random$magicNum2 = 12211;
+var _elm_lang$core$Random$magicNum1 = 53668;
+var _elm_lang$core$Random$magicNum0 = 40014;
+var _elm_lang$core$Random$step = F2(
+	function (_p3, seed) {
+		var _p4 = _p3;
+		return _p4._0(seed);
+	});
+var _elm_lang$core$Random$onEffects = F3(
+	function (router, commands, seed) {
+		var _p5 = commands;
+		if (_p5.ctor === '[]') {
+			return _elm_lang$core$Task$succeed(seed);
+		} else {
+			var _p6 = A2(_elm_lang$core$Random$step, _p5._0._0, seed);
+			var value = _p6._0;
+			var newSeed = _p6._1;
+			return A2(
+				_elm_lang$core$Task$andThen,
+				function (_p7) {
+					return A3(_elm_lang$core$Random$onEffects, router, _p5._1, newSeed);
+				},
+				A2(_elm_lang$core$Platform$sendToApp, router, value));
+		}
+	});
+var _elm_lang$core$Random$listHelp = F4(
+	function (list, n, generate, seed) {
+		listHelp:
+		while (true) {
+			if (_elm_lang$core$Native_Utils.cmp(n, 1) < 0) {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$List$reverse(list),
+					_1: seed
+				};
+			} else {
+				var _p8 = generate(seed);
+				var value = _p8._0;
+				var newSeed = _p8._1;
+				var _v2 = {ctor: '::', _0: value, _1: list},
+					_v3 = n - 1,
+					_v4 = generate,
+					_v5 = newSeed;
+				list = _v2;
+				n = _v3;
+				generate = _v4;
+				seed = _v5;
+				continue listHelp;
+			}
+		}
+	});
+var _elm_lang$core$Random$minInt = -2147483648;
+var _elm_lang$core$Random$maxInt = 2147483647;
+var _elm_lang$core$Random$iLogBase = F2(
+	function (b, i) {
+		return (_elm_lang$core$Native_Utils.cmp(i, b) < 0) ? 1 : (1 + A2(_elm_lang$core$Random$iLogBase, b, (i / b) | 0));
+	});
+var _elm_lang$core$Random$command = _elm_lang$core$Native_Platform.leaf('Random');
+var _elm_lang$core$Random$Generator = function (a) {
+	return {ctor: 'Generator', _0: a};
+};
+var _elm_lang$core$Random$list = F2(
+	function (n, _p9) {
+		var _p10 = _p9;
+		return _elm_lang$core$Random$Generator(
+			function (seed) {
+				return A4(
+					_elm_lang$core$Random$listHelp,
+					{ctor: '[]'},
+					n,
+					_p10._0,
+					seed);
+			});
+	});
+var _elm_lang$core$Random$map = F2(
+	function (func, _p11) {
+		var _p12 = _p11;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p13 = _p12._0(seed0);
+				var a = _p13._0;
+				var seed1 = _p13._1;
+				return {
+					ctor: '_Tuple2',
+					_0: func(a),
+					_1: seed1
+				};
+			});
+	});
+var _elm_lang$core$Random$map2 = F3(
+	function (func, _p15, _p14) {
+		var _p16 = _p15;
+		var _p17 = _p14;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p18 = _p16._0(seed0);
+				var a = _p18._0;
+				var seed1 = _p18._1;
+				var _p19 = _p17._0(seed1);
+				var b = _p19._0;
+				var seed2 = _p19._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A2(func, a, b),
+					_1: seed2
+				};
+			});
+	});
+var _elm_lang$core$Random$pair = F2(
+	function (genA, genB) {
+		return A3(
+			_elm_lang$core$Random$map2,
+			F2(
+				function (v0, v1) {
+					return {ctor: '_Tuple2', _0: v0, _1: v1};
+				}),
+			genA,
+			genB);
+	});
+var _elm_lang$core$Random$map3 = F4(
+	function (func, _p22, _p21, _p20) {
+		var _p23 = _p22;
+		var _p24 = _p21;
+		var _p25 = _p20;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p26 = _p23._0(seed0);
+				var a = _p26._0;
+				var seed1 = _p26._1;
+				var _p27 = _p24._0(seed1);
+				var b = _p27._0;
+				var seed2 = _p27._1;
+				var _p28 = _p25._0(seed2);
+				var c = _p28._0;
+				var seed3 = _p28._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A3(func, a, b, c),
+					_1: seed3
+				};
+			});
+	});
+var _elm_lang$core$Random$map4 = F5(
+	function (func, _p32, _p31, _p30, _p29) {
+		var _p33 = _p32;
+		var _p34 = _p31;
+		var _p35 = _p30;
+		var _p36 = _p29;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p37 = _p33._0(seed0);
+				var a = _p37._0;
+				var seed1 = _p37._1;
+				var _p38 = _p34._0(seed1);
+				var b = _p38._0;
+				var seed2 = _p38._1;
+				var _p39 = _p35._0(seed2);
+				var c = _p39._0;
+				var seed3 = _p39._1;
+				var _p40 = _p36._0(seed3);
+				var d = _p40._0;
+				var seed4 = _p40._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A4(func, a, b, c, d),
+					_1: seed4
+				};
+			});
+	});
+var _elm_lang$core$Random$map5 = F6(
+	function (func, _p45, _p44, _p43, _p42, _p41) {
+		var _p46 = _p45;
+		var _p47 = _p44;
+		var _p48 = _p43;
+		var _p49 = _p42;
+		var _p50 = _p41;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p51 = _p46._0(seed0);
+				var a = _p51._0;
+				var seed1 = _p51._1;
+				var _p52 = _p47._0(seed1);
+				var b = _p52._0;
+				var seed2 = _p52._1;
+				var _p53 = _p48._0(seed2);
+				var c = _p53._0;
+				var seed3 = _p53._1;
+				var _p54 = _p49._0(seed3);
+				var d = _p54._0;
+				var seed4 = _p54._1;
+				var _p55 = _p50._0(seed4);
+				var e = _p55._0;
+				var seed5 = _p55._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A5(func, a, b, c, d, e),
+					_1: seed5
+				};
+			});
+	});
+var _elm_lang$core$Random$andThen = F2(
+	function (callback, _p56) {
+		var _p57 = _p56;
+		return _elm_lang$core$Random$Generator(
+			function (seed) {
+				var _p58 = _p57._0(seed);
+				var result = _p58._0;
+				var newSeed = _p58._1;
+				var _p59 = callback(result);
+				var genB = _p59._0;
+				return genB(newSeed);
+			});
+	});
+var _elm_lang$core$Random$State = F2(
+	function (a, b) {
+		return {ctor: 'State', _0: a, _1: b};
+	});
+var _elm_lang$core$Random$initState = function (seed) {
+	var s = A2(_elm_lang$core$Basics$max, seed, 0 - seed);
+	var q = (s / (_elm_lang$core$Random$magicNum6 - 1)) | 0;
+	var s2 = A2(_elm_lang$core$Basics_ops['%'], q, _elm_lang$core$Random$magicNum7 - 1);
+	var s1 = A2(_elm_lang$core$Basics_ops['%'], s, _elm_lang$core$Random$magicNum6 - 1);
+	return A2(_elm_lang$core$Random$State, s1 + 1, s2 + 1);
+};
+var _elm_lang$core$Random$next = function (_p60) {
+	var _p61 = _p60;
+	var _p63 = _p61._1;
+	var _p62 = _p61._0;
+	var k2 = (_p63 / _elm_lang$core$Random$magicNum3) | 0;
+	var rawState2 = (_elm_lang$core$Random$magicNum4 * (_p63 - (k2 * _elm_lang$core$Random$magicNum3))) - (k2 * _elm_lang$core$Random$magicNum5);
+	var newState2 = (_elm_lang$core$Native_Utils.cmp(rawState2, 0) < 0) ? (rawState2 + _elm_lang$core$Random$magicNum7) : rawState2;
+	var k1 = (_p62 / _elm_lang$core$Random$magicNum1) | 0;
+	var rawState1 = (_elm_lang$core$Random$magicNum0 * (_p62 - (k1 * _elm_lang$core$Random$magicNum1))) - (k1 * _elm_lang$core$Random$magicNum2);
+	var newState1 = (_elm_lang$core$Native_Utils.cmp(rawState1, 0) < 0) ? (rawState1 + _elm_lang$core$Random$magicNum6) : rawState1;
+	var z = newState1 - newState2;
+	var newZ = (_elm_lang$core$Native_Utils.cmp(z, 1) < 0) ? (z + _elm_lang$core$Random$magicNum8) : z;
+	return {
+		ctor: '_Tuple2',
+		_0: newZ,
+		_1: A2(_elm_lang$core$Random$State, newState1, newState2)
+	};
+};
+var _elm_lang$core$Random$split = function (_p64) {
+	var _p65 = _p64;
+	var _p68 = _p65._1;
+	var _p67 = _p65._0;
+	var _p66 = _elm_lang$core$Tuple$second(
+		_elm_lang$core$Random$next(_p65));
+	var t1 = _p66._0;
+	var t2 = _p66._1;
+	var new_s2 = _elm_lang$core$Native_Utils.eq(_p68, 1) ? (_elm_lang$core$Random$magicNum7 - 1) : (_p68 - 1);
+	var new_s1 = _elm_lang$core$Native_Utils.eq(_p67, _elm_lang$core$Random$magicNum6 - 1) ? 1 : (_p67 + 1);
+	return {
+		ctor: '_Tuple2',
+		_0: A2(_elm_lang$core$Random$State, new_s1, t2),
+		_1: A2(_elm_lang$core$Random$State, t1, new_s2)
+	};
+};
+var _elm_lang$core$Random$Seed = function (a) {
+	return {ctor: 'Seed', _0: a};
+};
+var _elm_lang$core$Random$int = F2(
+	function (a, b) {
+		return _elm_lang$core$Random$Generator(
+			function (_p69) {
+				var _p70 = _p69;
+				var _p75 = _p70._0;
+				var base = 2147483561;
+				var f = F3(
+					function (n, acc, state) {
+						f:
+						while (true) {
+							var _p71 = n;
+							if (_p71 === 0) {
+								return {ctor: '_Tuple2', _0: acc, _1: state};
+							} else {
+								var _p72 = _p75.next(state);
+								var x = _p72._0;
+								var nextState = _p72._1;
+								var _v27 = n - 1,
+									_v28 = x + (acc * base),
+									_v29 = nextState;
+								n = _v27;
+								acc = _v28;
+								state = _v29;
+								continue f;
+							}
+						}
+					});
+				var _p73 = (_elm_lang$core$Native_Utils.cmp(a, b) < 0) ? {ctor: '_Tuple2', _0: a, _1: b} : {ctor: '_Tuple2', _0: b, _1: a};
+				var lo = _p73._0;
+				var hi = _p73._1;
+				var k = (hi - lo) + 1;
+				var n = A2(_elm_lang$core$Random$iLogBase, base, k);
+				var _p74 = A3(f, n, 1, _p75.state);
+				var v = _p74._0;
+				var nextState = _p74._1;
+				return {
+					ctor: '_Tuple2',
+					_0: lo + A2(_elm_lang$core$Basics_ops['%'], v, k),
+					_1: _elm_lang$core$Random$Seed(
+						_elm_lang$core$Native_Utils.update(
+							_p75,
+							{state: nextState}))
+				};
+			});
+	});
+var _elm_lang$core$Random$bool = A2(
+	_elm_lang$core$Random$map,
+	F2(
+		function (x, y) {
+			return _elm_lang$core$Native_Utils.eq(x, y);
+		})(1),
+	A2(_elm_lang$core$Random$int, 0, 1));
+var _elm_lang$core$Random$float = F2(
+	function (a, b) {
+		return _elm_lang$core$Random$Generator(
+			function (seed) {
+				var _p76 = A2(
+					_elm_lang$core$Random$step,
+					A2(_elm_lang$core$Random$int, _elm_lang$core$Random$minInt, _elm_lang$core$Random$maxInt),
+					seed);
+				var number = _p76._0;
+				var newSeed = _p76._1;
+				var negativeOneToOne = _elm_lang$core$Basics$toFloat(number) / _elm_lang$core$Basics$toFloat(_elm_lang$core$Random$maxInt - _elm_lang$core$Random$minInt);
+				var _p77 = (_elm_lang$core$Native_Utils.cmp(a, b) < 0) ? {ctor: '_Tuple2', _0: a, _1: b} : {ctor: '_Tuple2', _0: b, _1: a};
+				var lo = _p77._0;
+				var hi = _p77._1;
+				var scaled = ((lo + hi) / 2) + ((hi - lo) * negativeOneToOne);
+				return {ctor: '_Tuple2', _0: scaled, _1: newSeed};
+			});
+	});
+var _elm_lang$core$Random$initialSeed = function (n) {
+	return _elm_lang$core$Random$Seed(
+		{
+			state: _elm_lang$core$Random$initState(n),
+			next: _elm_lang$core$Random$next,
+			split: _elm_lang$core$Random$split,
+			range: _elm_lang$core$Random$range
+		});
+};
+var _elm_lang$core$Random$init = A2(
+	_elm_lang$core$Task$andThen,
+	function (t) {
+		return _elm_lang$core$Task$succeed(
+			_elm_lang$core$Random$initialSeed(
+				_elm_lang$core$Basics$round(t)));
+	},
+	_elm_lang$core$Time$now);
+var _elm_lang$core$Random$Generate = function (a) {
+	return {ctor: 'Generate', _0: a};
+};
+var _elm_lang$core$Random$generate = F2(
+	function (tagger, generator) {
+		return _elm_lang$core$Random$command(
+			_elm_lang$core$Random$Generate(
+				A2(_elm_lang$core$Random$map, tagger, generator)));
+	});
+var _elm_lang$core$Random$cmdMap = F2(
+	function (func, _p78) {
+		var _p79 = _p78;
+		return _elm_lang$core$Random$Generate(
+			A2(_elm_lang$core$Random$map, func, _p79._0));
+	});
+_elm_lang$core$Native_Platform.effectManagers['Random'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Random$init, onEffects: _elm_lang$core$Random$onEffects, onSelfMsg: _elm_lang$core$Random$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Random$cmdMap};
+
 var _elm_lang$core$Regex$split = _elm_lang$core$Native_Regex.split;
 var _elm_lang$core$Regex$replace = _elm_lang$core$Native_Regex.replace;
 var _elm_lang$core$Regex$find = _elm_lang$core$Native_Regex.find;
@@ -11959,66 +12338,346 @@ var _user$project$Level_Start$subscriptions = _elm_lang$core$Platform_Sub$batch(
 	});
 
 var _user$project$Level_SuchDoge$shouldAdvance = function (model) {
-	return !model.isSpeaking;
+	var _p0 = model.step;
+	if (_p0.ctor === 'Finish') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var _user$project$Level_SuchDoge$timerView = function (ticks) {
+	return A2(
+		_evancz$elm_graphics$Collage$move,
+		{ctor: '_Tuple2', _0: 180, _1: 180},
+		_evancz$elm_graphics$Collage$toForm(
+			_evancz$elm_graphics$Element$centered(
+				A2(
+					_evancz$elm_graphics$Text$color,
+					_elm_lang$core$Color$gray,
+					_evancz$elm_graphics$Text$fromString(
+						_elm_lang$core$Basics$toString(30 - ticks))))));
+};
+var _user$project$Level_SuchDoge$gameEnemy = function (enemy) {
+	return A2(
+		_evancz$elm_graphics$Collage$move,
+		enemy.position,
+		_evancz$elm_graphics$Collage$toForm(
+			_evancz$elm_graphics$Element$centered(
+				A2(
+					_evancz$elm_graphics$Text$height,
+					20,
+					A2(
+						_evancz$elm_graphics$Text$color,
+						enemy.color,
+						_evancz$elm_graphics$Text$monospace(
+							_evancz$elm_graphics$Text$fromString(enemy.text)))))));
+};
+var _user$project$Level_SuchDoge$gameRound = function (round) {
+	return A2(_elm_lang$core$List$map, _user$project$Level_SuchDoge$gameEnemy, round.enemies);
+};
+var _user$project$Level_SuchDoge$characterView = function (point) {
+	return A2(
+		_evancz$elm_graphics$Collage$move,
+		point,
+		A2(
+			_evancz$elm_graphics$Collage$filled,
+			_elm_lang$core$Color$white,
+			_evancz$elm_graphics$Collage$circle(5)));
 };
 var _user$project$Level_SuchDoge$dialogueSnippet = F2(
 	function (end, sentence) {
 		return A3(_elm_lang$core$String$slice, 0, end, sentence);
 	});
-var _user$project$Level_SuchDoge$intro = _elm_lang$core$Array$fromList(
-	{
-		ctor: '::',
-		_0: 'Welcome to the Doge Park.  ',
-		_1: {
-			ctor: '::',
-			_0: 'You must entertain me.  ',
-			_1: {
+var _user$project$Level_SuchDoge$dogeFace = _evancz$elm_graphics$Collage$toForm(
+	A3(_evancz$elm_graphics$Element$image, 64, 64, 'doge.gif'));
+var _user$project$Level_SuchDoge$gameFrame = F2(
+	function (model, game) {
+		return A2(
+			_elm_lang$core$List$append,
+			game,
+			{
 				ctor: '::',
-				_0: 'Much fleeing, such time.  ',
+				_0: _user$project$Level_SuchDoge$characterView(model.player),
 				_1: {
 					ctor: '::',
-					_0: 'WOW, LET\'S GO !!!  ',
-					_1: {ctor: '[]'}
-				}
-			}
-		}
-	});
-var _user$project$Level_SuchDoge$dogeFace = _evancz$elm_graphics$Collage$toForm(
-	A3(_evancz$elm_graphics$Element$image, 50, 50, 'doge.gif'));
-var _user$project$Level_SuchDoge$gameView = function (model) {
-	var _p0 = A2(_elm_lang$core$Array$get, model.currentSentence, model.sentences);
-	if (_p0.ctor === 'Just') {
-		return {
-			ctor: '::',
-			_0: A2(
-				_evancz$elm_graphics$Collage$moveY,
-				150,
-				_evancz$elm_graphics$Collage$toForm(
-					_evancz$elm_graphics$Element$leftAligned(
-						_evancz$elm_graphics$Text$monospace(
+					_0: A2(
+						_evancz$elm_graphics$Collage$move,
+						{ctor: '_Tuple2', _0: -160, _1: 160},
+						_user$project$Level_SuchDoge$dogeFace),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_evancz$elm_graphics$Collage$moveX,
+							-198,
 							A2(
-								_evancz$elm_graphics$Text$color,
-								_elm_lang$core$Color$white,
-								_evancz$elm_graphics$Text$fromString(
-									A2(_user$project$Level_SuchDoge$dialogueSnippet, model.currentCharacter, _p0._0))))))),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_evancz$elm_graphics$Collage$move,
-					{ctor: '_Tuple2', _0: -150, _1: 150},
-					_user$project$Level_SuchDoge$dogeFace),
-				_1: {ctor: '[]'}
+								_evancz$elm_graphics$Collage$filled,
+								_elm_lang$core$Color$gray,
+								A2(_evancz$elm_graphics$Collage$rect, 2, 400))),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_evancz$elm_graphics$Collage$moveX,
+								198,
+								A2(
+									_evancz$elm_graphics$Collage$filled,
+									_elm_lang$core$Color$gray,
+									A2(_evancz$elm_graphics$Collage$rect, 2, 400))),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_evancz$elm_graphics$Collage$moveY,
+									-198,
+									A2(
+										_evancz$elm_graphics$Collage$filled,
+										_elm_lang$core$Color$gray,
+										A2(_evancz$elm_graphics$Collage$rect, 400, 2))),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_evancz$elm_graphics$Collage$moveY,
+										198,
+										A2(
+											_evancz$elm_graphics$Collage$filled,
+											_elm_lang$core$Color$gray,
+											A2(_evancz$elm_graphics$Collage$rect, 400, 2))),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			});
+	});
+var _user$project$Level_SuchDoge$isWithin = F3(
+	function (min, max, num) {
+		return (_elm_lang$core$Native_Utils.cmp(num, min) > 0) && (_elm_lang$core$Native_Utils.cmp(num, max) < 0);
+	});
+var _user$project$Level_SuchDoge$isLoser = F2(
+	function (enemies, _p1) {
+		var _p2 = _p1;
+		return A2(
+			_elm_lang$core$List$any,
+			function (e) {
+				var inside = F2(
+					function (ax, gap) {
+						return A2(_user$project$Level_SuchDoge$isWithin, ax - gap, ax + gap);
+					});
+				var heightGap = 20;
+				var widthGap = 30;
+				var _p3 = e.position;
+				var ex = _p3._0;
+				var ey = _p3._1;
+				return A3(inside, ex, widthGap, _p2._0) && A3(inside, ey, heightGap, _p2._1);
+			},
+			enemies);
+	});
+var _user$project$Level_SuchDoge$rainbow = function (color) {
+	return _elm_lang$core$Native_Utils.eq(color, _elm_lang$core$Color$green) ? _elm_lang$core$Color$blue : (_elm_lang$core$Native_Utils.eq(color, _elm_lang$core$Color$blue) ? _elm_lang$core$Color$brown : (_elm_lang$core$Native_Utils.eq(color, _elm_lang$core$Color$brown) ? _elm_lang$core$Color$yellow : (_elm_lang$core$Native_Utils.eq(color, _elm_lang$core$Color$yellow) ? _elm_lang$core$Color$red : (_elm_lang$core$Native_Utils.eq(color, _elm_lang$core$Color$red) ? _elm_lang$core$Color$green : color))));
+};
+var _user$project$Level_SuchDoge$updateEnemy = F2(
+	function (time, enemy) {
+		return _elm_lang$core$Native_Utils.update(
+			enemy,
+			{
+				color: _user$project$Level_SuchDoge$rainbow(enemy.color)
+			});
+	});
+var _user$project$Level_SuchDoge$updateRound = F2(
+	function (time, round) {
+		return _elm_lang$core$Native_Utils.update(
+			round,
+			{
+				enemies: A2(
+					_elm_lang$core$List$map,
+					_user$project$Level_SuchDoge$updateEnemy(time),
+					round.enemies)
+			});
+	});
+var _user$project$Level_SuchDoge$roundModel = function (round) {
+	var _p4 = round;
+	switch (_p4.ctor) {
+		case 'Easy':
+			return _p4._0;
+		case 'Medium':
+			return _p4._0;
+		case 'Hard':
+			return _p4._0;
+		default:
+			return _p4._0;
+	}
+};
+var _user$project$Level_SuchDoge$clamp = F3(
+	function (mini, maxi, num) {
+		return A2(
+			_elm_lang$core$Basics$min,
+			maxi,
+			A2(_elm_lang$core$Basics$max, mini, num));
+	});
+var _user$project$Level_SuchDoge$directionSign = function (direction) {
+	var _p5 = direction;
+	switch (_p5.ctor) {
+		case 'Positive':
+			return 1;
+		case 'Negative':
+			return -1;
+		default:
+			return 0;
+	}
+};
+var _user$project$Level_SuchDoge$updatePlayer = F2(
+	function (time, model) {
+		var _p6 = model.player;
+		var oldX = _p6._0;
+		var oldY = _p6._1;
+		var signY = _user$project$Level_SuchDoge$directionSign(model.directionY);
+		var newY = A3(_user$project$Level_SuchDoge$clamp, -190, 190, oldY + ((0.25 * signY) * time));
+		var signX = _user$project$Level_SuchDoge$directionSign(model.directionX);
+		var newX = A3(_user$project$Level_SuchDoge$clamp, -190, 190, oldX + ((0.25 * signX) * time));
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				player: {ctor: '_Tuple2', _0: newX, _1: newY}
+			});
+	});
+var _user$project$Level_SuchDoge$updateEnemyDirection = F4(
+	function (speed, time, _p7, enemy) {
+		var _p8 = _p7;
+		var _p9 = enemy.position;
+		var oldX = _p9._0;
+		var oldY = _p9._1;
+		var signY = _user$project$Level_SuchDoge$directionSign(_p8._1);
+		var newY = A3(_user$project$Level_SuchDoge$clamp, -190, 190, oldY + ((speed * signY) * time));
+		var signX = _user$project$Level_SuchDoge$directionSign(_p8._0);
+		var newX = A3(_user$project$Level_SuchDoge$clamp, -190, 190, oldX + ((speed * signX) * time));
+		return _elm_lang$core$Native_Utils.update(
+			enemy,
+			{
+				position: {ctor: '_Tuple2', _0: newX, _1: newY}
+			});
+	});
+var _user$project$Level_SuchDoge$speechText = function (speech) {
+	var _p10 = speech;
+	switch (_p10.ctor) {
+		case 'Intro':
+			return _elm_lang$core$Array$fromList(
+				{
+					ctor: '::',
+					_0: 'Welcome to the Doge Park.  ',
+					_1: {
+						ctor: '::',
+						_0: 'U must entertain me.  ',
+						_1: {
+							ctor: '::',
+							_0: 'Much fleeing, such time.  ',
+							_1: {
+								ctor: '::',
+								_0: 'WOW, LET\'S GO !!!  ',
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				});
+		case 'PostEasy':
+			return _elm_lang$core$Array$fromList(
+				{
+					ctor: '::',
+					_0: 'Such is life. ',
+					_1: {
+						ctor: '::',
+						_0: 'Now try twice. ',
+						_1: {ctor: '[]'}
+					}
+				});
+		case 'PostMedium':
+			return _elm_lang$core$Array$fromList(
+				{
+					ctor: '::',
+					_0: 'Much of life. ',
+					_1: {
+						ctor: '::',
+						_0: 'Boost ur strife. ',
+						_1: {ctor: '[]'}
+					}
+				});
+		case 'PostHard':
+			return _elm_lang$core$Array$fromList(
+				{
+					ctor: '::',
+					_0: 'So good. ',
+					_1: {
+						ctor: '::',
+						_0: 'Maybe u go all the way. ',
+						_1: {
+							ctor: '::',
+							_0: 'Or not buddy. ',
+							_1: {ctor: '[]'}
+						}
+					}
+				});
+		default:
+			return _elm_lang$core$Array$fromList(
+				{
+					ctor: '::',
+					_0: 'Ok u pass. ',
+					_1: {
+						ctor: '::',
+						_0: 'Thank u 4 entertaining me. ',
+						_1: {ctor: '[]'}
+					}
+				});
+	}
+};
+var _user$project$Level_SuchDoge$gameView = function (model) {
+	var _p11 = model.step;
+	switch (_p11.ctor) {
+		case 'SpeechStep':
+			var _p12 = A2(
+				_elm_lang$core$Array$get,
+				model.currentSentence,
+				_user$project$Level_SuchDoge$speechText(_p11._0));
+			if (_p12.ctor === 'Just') {
+				return A2(
+					_user$project$Level_SuchDoge$gameFrame,
+					model,
+					{
+						ctor: '::',
+						_0: A2(
+							_evancz$elm_graphics$Collage$moveY,
+							160,
+							_evancz$elm_graphics$Collage$toForm(
+								_evancz$elm_graphics$Element$leftAligned(
+									_evancz$elm_graphics$Text$monospace(
+										A2(
+											_evancz$elm_graphics$Text$color,
+											_elm_lang$core$Color$white,
+											_evancz$elm_graphics$Text$fromString(
+												A2(_user$project$Level_SuchDoge$dialogueSnippet, model.currentCharacter, _p12._0))))))),
+						_1: {ctor: '[]'}
+					});
+			} else {
+				return A2(
+					_user$project$Level_SuchDoge$gameFrame,
+					model,
+					{ctor: '[]'});
 			}
-		};
-	} else {
-		return {
-			ctor: '::',
-			_0: A2(
-				_evancz$elm_graphics$Collage$move,
-				{ctor: '_Tuple2', _0: -150, _1: 150},
-				_user$project$Level_SuchDoge$dogeFace),
-			_1: {ctor: '[]'}
-		};
+		case 'RoundStep':
+			return A2(
+				_elm_lang$core$List$append,
+				{
+					ctor: '::',
+					_0: _user$project$Level_SuchDoge$timerView(model.roundTicks),
+					_1: {ctor: '[]'}
+				},
+				A2(
+					_user$project$Level_SuchDoge$gameFrame,
+					model,
+					_user$project$Level_SuchDoge$gameRound(
+						_user$project$Level_SuchDoge$roundModel(_p11._0))));
+		default:
+			return A2(
+				_user$project$Level_SuchDoge$gameFrame,
+				model,
+				{ctor: '[]'});
 	}
 };
 var _user$project$Level_SuchDoge$view = function (model) {
@@ -12029,62 +12688,481 @@ var _user$project$Level_SuchDoge$view = function (model) {
 			400,
 			_user$project$Level_SuchDoge$gameView(model)));
 };
-var _user$project$Level_SuchDoge$update = F2(
-	function (msg, model) {
-		var _p1 = msg;
-		var _p2 = A2(_elm_lang$core$Array$get, model.currentSentence, model.sentences);
-		if (_p2.ctor === 'Just') {
-			if (_elm_lang$core$Native_Utils.eq(
-				model.currentCharacter,
-				_elm_lang$core$String$length(_p2._0))) {
-				var _p3 = A2(_elm_lang$core$Array$get, model.currentSentence, model.sentences);
-				if (_p3.ctor === 'Just') {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{currentSentence: model.currentSentence + 1, currentCharacter: 0}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{isSpeaking: false}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
-			} else {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
+var _user$project$Level_SuchDoge$enemyStart = {ctor: '_Tuple2', _0: -140, _1: 140};
+var _user$project$Level_SuchDoge$initEasy = {
+	speed: 0.8,
+	enemies: {
+		ctor: '::',
+		_0: {id: 1, text: 'WOW', color: _elm_lang$core$Color$blue, position: _user$project$Level_SuchDoge$enemyStart},
+		_1: {ctor: '[]'}
+	}
+};
+var _user$project$Level_SuchDoge$initMedium = {
+	speed: 0.9,
+	enemies: {
+		ctor: '::',
+		_0: {id: 1, text: 'SUCH', color: _elm_lang$core$Color$green, position: _user$project$Level_SuchDoge$enemyStart},
+		_1: {
+			ctor: '::',
+			_0: {id: 2, text: 'WOW', color: _elm_lang$core$Color$red, position: _user$project$Level_SuchDoge$enemyStart},
+			_1: {ctor: '[]'}
+		}
+	}
+};
+var _user$project$Level_SuchDoge$initHard = {
+	speed: 1,
+	enemies: {
+		ctor: '::',
+		_0: {id: 1, text: 'MUCH', color: _elm_lang$core$Color$green, position: _user$project$Level_SuchDoge$enemyStart},
+		_1: {
+			ctor: '::',
+			_0: {id: 2, text: 'WOW', color: _elm_lang$core$Color$red, position: _user$project$Level_SuchDoge$enemyStart},
+			_1: {ctor: '[]'}
+		}
+	}
+};
+var _user$project$Level_SuchDoge$initFinal = {
+	speed: 1.1,
+	enemies: {
+		ctor: '::',
+		_0: {id: 1, text: 'MUCH', color: _elm_lang$core$Color$yellow, position: _user$project$Level_SuchDoge$enemyStart},
+		_1: {
+			ctor: '::',
+			_0: {id: 2, text: 'DOGE', color: _elm_lang$core$Color$brown, position: _user$project$Level_SuchDoge$enemyStart},
+			_1: {
+				ctor: '::',
+				_0: {id: 3, text: 'WOW', color: _elm_lang$core$Color$orange, position: _user$project$Level_SuchDoge$enemyStart},
+				_1: {ctor: '[]'}
+			}
+		}
+	}
+};
+var _user$project$Level_SuchDoge$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {step: a, currentSentence: b, currentCharacter: c, player: d, directionX: e, directionY: f, roundTicks: g};
+	});
+var _user$project$Level_SuchDoge$Enemy = F4(
+	function (a, b, c, d) {
+		return {id: a, text: b, color: c, position: d};
+	});
+var _user$project$Level_SuchDoge$RoundModel = F2(
+	function (a, b) {
+		return {speed: a, enemies: b};
+	});
+var _user$project$Level_SuchDoge$Negative = {ctor: 'Negative'};
+var _user$project$Level_SuchDoge$Zero = {ctor: 'Zero'};
+var _user$project$Level_SuchDoge$Positive = {ctor: 'Positive'};
+var _user$project$Level_SuchDoge$updateDirection = F3(
+	function (isDown, key, model) {
+		if (isDown) {
+			var _p13 = key;
+			switch (_p13) {
+				case 37:
+					return _elm_lang$core$Native_Utils.update(
 						model,
-						{currentCharacter: model.currentCharacter + 1}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
+						{directionX: _user$project$Level_SuchDoge$Negative});
+				case 38:
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{directionY: _user$project$Level_SuchDoge$Positive});
+				case 39:
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{directionX: _user$project$Level_SuchDoge$Positive});
+				case 40:
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{directionY: _user$project$Level_SuchDoge$Negative});
+				default:
+					return model;
 			}
 		} else {
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{isSpeaking: false}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
+			var _p14 = key;
+			switch (_p14) {
+				case 37:
+					return _elm_lang$core$Native_Utils.eq(model.directionX, _user$project$Level_SuchDoge$Negative) ? _elm_lang$core$Native_Utils.update(
+						model,
+						{directionX: _user$project$Level_SuchDoge$Zero}) : model;
+				case 38:
+					return _elm_lang$core$Native_Utils.eq(model.directionY, _user$project$Level_SuchDoge$Positive) ? _elm_lang$core$Native_Utils.update(
+						model,
+						{directionY: _user$project$Level_SuchDoge$Zero}) : model;
+				case 39:
+					return _elm_lang$core$Native_Utils.eq(model.directionX, _user$project$Level_SuchDoge$Positive) ? _elm_lang$core$Native_Utils.update(
+						model,
+						{directionX: _user$project$Level_SuchDoge$Zero}) : model;
+				case 40:
+					return _elm_lang$core$Native_Utils.eq(model.directionY, _user$project$Level_SuchDoge$Negative) ? _elm_lang$core$Native_Utils.update(
+						model,
+						{directionY: _user$project$Level_SuchDoge$Zero}) : model;
+				default:
+					return model;
+			}
 		}
 	});
-var _user$project$Level_SuchDoge$init = {isSpeaking: true, sentences: _user$project$Level_SuchDoge$intro, currentSentence: 0, currentCharacter: 0};
-var _user$project$Level_SuchDoge$Model = F4(
-	function (a, b, c, d) {
-		return {isSpeaking: a, sentences: b, currentSentence: c, currentCharacter: d};
+var _user$project$Level_SuchDoge$randomDirection = A2(
+	_elm_lang$core$Random$map,
+	function (bool) {
+		return bool ? _user$project$Level_SuchDoge$Positive : _user$project$Level_SuchDoge$Negative;
+	},
+	_elm_lang$core$Random$bool);
+var _user$project$Level_SuchDoge$randomVector = A2(_elm_lang$core$Random$pair, _user$project$Level_SuchDoge$randomDirection, _user$project$Level_SuchDoge$randomDirection);
+var _user$project$Level_SuchDoge$RoundTick = function (a) {
+	return {ctor: 'RoundTick', _0: a};
+};
+var _user$project$Level_SuchDoge$MoveEnemy = F3(
+	function (a, b, c) {
+		return {ctor: 'MoveEnemy', _0: a, _1: b, _2: c};
 	});
+var _user$project$Level_SuchDoge$Frame = function (a) {
+	return {ctor: 'Frame', _0: a};
+};
+var _user$project$Level_SuchDoge$KeyUp = function (a) {
+	return {ctor: 'KeyUp', _0: a};
+};
+var _user$project$Level_SuchDoge$KeyDown = function (a) {
+	return {ctor: 'KeyDown', _0: a};
+};
+var _user$project$Level_SuchDoge$StepForward = {ctor: 'StepForward'};
 var _user$project$Level_SuchDoge$Speak = function (a) {
 	return {ctor: 'Speak', _0: a};
 };
 var _user$project$Level_SuchDoge$subscriptions = function (model) {
-	return model.isSpeaking ? A2(_elm_lang$core$Time$every, 150 * _elm_lang$core$Time$millisecond, _user$project$Level_SuchDoge$Speak) : A2(_elm_lang$core$Time$every, _elm_lang$core$Time$millisecond, _user$project$Level_SuchDoge$Speak);
+	var stepSub = function () {
+		var _p15 = model.step;
+		switch (_p15.ctor) {
+			case 'SpeechStep':
+				return A2(_elm_lang$core$Time$every, 175 * _elm_lang$core$Time$millisecond, _user$project$Level_SuchDoge$Speak);
+			case 'RoundStep':
+				return A2(_elm_lang$core$Time$every, _elm_lang$core$Time$second, _user$project$Level_SuchDoge$RoundTick);
+			default:
+				return _elm_lang$core$Platform_Sub$none;
+		}
+	}();
+	return _elm_lang$core$Platform_Sub$batch(
+		{
+			ctor: '::',
+			_0: _elm_lang$keyboard$Keyboard$downs(_user$project$Level_SuchDoge$KeyDown),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$keyboard$Keyboard$ups(_user$project$Level_SuchDoge$KeyUp),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$animation_frame$AnimationFrame$diffs(_user$project$Level_SuchDoge$Frame),
+					_1: {
+						ctor: '::',
+						_0: stepSub,
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
 };
+var _user$project$Level_SuchDoge$Final = function (a) {
+	return {ctor: 'Final', _0: a};
+};
+var _user$project$Level_SuchDoge$Hard = function (a) {
+	return {ctor: 'Hard', _0: a};
+};
+var _user$project$Level_SuchDoge$Medium = function (a) {
+	return {ctor: 'Medium', _0: a};
+};
+var _user$project$Level_SuchDoge$Easy = function (a) {
+	return {ctor: 'Easy', _0: a};
+};
+var _user$project$Level_SuchDoge$mapRound = F2(
+	function (fn, round) {
+		var _p16 = round;
+		switch (_p16.ctor) {
+			case 'Easy':
+				return _user$project$Level_SuchDoge$Easy(
+					fn(_p16._0));
+			case 'Medium':
+				return _user$project$Level_SuchDoge$Medium(
+					fn(_p16._0));
+			case 'Hard':
+				return _user$project$Level_SuchDoge$Hard(
+					fn(_p16._0));
+			default:
+				return _user$project$Level_SuchDoge$Final(
+					fn(_p16._0));
+		}
+	});
+var _user$project$Level_SuchDoge$PostFinal = {ctor: 'PostFinal'};
+var _user$project$Level_SuchDoge$PostHard = {ctor: 'PostHard'};
+var _user$project$Level_SuchDoge$PostMedium = {ctor: 'PostMedium'};
+var _user$project$Level_SuchDoge$PostEasy = {ctor: 'PostEasy'};
+var _user$project$Level_SuchDoge$Intro = {ctor: 'Intro'};
+var _user$project$Level_SuchDoge$Finish = {ctor: 'Finish'};
+var _user$project$Level_SuchDoge$RoundStep = function (a) {
+	return {ctor: 'RoundStep', _0: a};
+};
+var _user$project$Level_SuchDoge$SpeechStep = function (a) {
+	return {ctor: 'SpeechStep', _0: a};
+};
+var _user$project$Level_SuchDoge$init = {
+	step: _user$project$Level_SuchDoge$SpeechStep(_user$project$Level_SuchDoge$Intro),
+	currentSentence: 0,
+	currentCharacter: 0,
+	player: {ctor: '_Tuple2', _0: 100, _1: -100},
+	directionX: _user$project$Level_SuchDoge$Zero,
+	directionY: _user$project$Level_SuchDoge$Zero,
+	roundTicks: 0
+};
+var _user$project$Level_SuchDoge$updateStep = function (model) {
+	var toStep = F2(
+		function (step, model) {
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Native_Utils.update(
+					model,
+					{step: step}),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
+		});
+	var _p17 = model.step;
+	switch (_p17.ctor) {
+		case 'SpeechStep':
+			var _p18 = _p17._0;
+			switch (_p18.ctor) {
+				case 'Intro':
+					return A2(
+						toStep,
+						_user$project$Level_SuchDoge$RoundStep(
+							_user$project$Level_SuchDoge$Easy(_user$project$Level_SuchDoge$initEasy)),
+						model);
+				case 'PostEasy':
+					return A2(
+						toStep,
+						_user$project$Level_SuchDoge$RoundStep(
+							_user$project$Level_SuchDoge$Medium(_user$project$Level_SuchDoge$initMedium)),
+						model);
+				case 'PostMedium':
+					return A2(
+						toStep,
+						_user$project$Level_SuchDoge$RoundStep(
+							_user$project$Level_SuchDoge$Hard(_user$project$Level_SuchDoge$initHard)),
+						model);
+				case 'PostHard':
+					return A2(
+						toStep,
+						_user$project$Level_SuchDoge$RoundStep(
+							_user$project$Level_SuchDoge$Final(_user$project$Level_SuchDoge$initFinal)),
+						model);
+				default:
+					return A2(toStep, _user$project$Level_SuchDoge$Finish, model);
+			}
+		case 'RoundStep':
+			var _p19 = _p17._0;
+			switch (_p19.ctor) {
+				case 'Easy':
+					return A2(
+						toStep,
+						_user$project$Level_SuchDoge$SpeechStep(_user$project$Level_SuchDoge$PostEasy),
+						model);
+				case 'Medium':
+					return A2(
+						toStep,
+						_user$project$Level_SuchDoge$SpeechStep(_user$project$Level_SuchDoge$PostMedium),
+						model);
+				case 'Hard':
+					return A2(
+						toStep,
+						_user$project$Level_SuchDoge$SpeechStep(_user$project$Level_SuchDoge$PostHard),
+						model);
+				default:
+					return A2(
+						toStep,
+						_user$project$Level_SuchDoge$SpeechStep(_user$project$Level_SuchDoge$PostFinal),
+						model);
+			}
+		default:
+			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+	}
+};
+var _user$project$Level_SuchDoge$update = F2(
+	function (msg, model) {
+		update:
+		while (true) {
+			var _p20 = {ctor: '_Tuple2', _0: msg, _1: model.step};
+			_v15_8:
+			do {
+				switch (_p20._0.ctor) {
+					case 'StepForward':
+						return _user$project$Level_SuchDoge$updateStep(
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{roundTicks: 0, currentSentence: 0, currentCharacter: 0}));
+					case 'KeyUp':
+						return {
+							ctor: '_Tuple2',
+							_0: A3(_user$project$Level_SuchDoge$updateDirection, false, _p20._0._0, model),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					case 'KeyDown':
+						return {
+							ctor: '_Tuple2',
+							_0: A3(_user$project$Level_SuchDoge$updateDirection, true, _p20._0._0, model),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					case 'RoundTick':
+						if (_p20._1.ctor === 'RoundStep') {
+							var newTick = model.roundTicks + 1;
+							if (_elm_lang$core$Native_Utils.eq(newTick, 30)) {
+								var _v16 = _user$project$Level_SuchDoge$StepForward,
+									_v17 = model;
+								msg = _v16;
+								model = _v17;
+								continue update;
+							} else {
+								return {
+									ctor: '_Tuple2',
+									_0: _elm_lang$core$Native_Utils.update(
+										model,
+										{roundTicks: newTick}),
+									_1: _elm_lang$core$Platform_Cmd$none
+								};
+							}
+						} else {
+							break _v15_8;
+						}
+					case 'Frame':
+						switch (_p20._1.ctor) {
+							case 'SpeechStep':
+								return {
+									ctor: '_Tuple2',
+									_0: A2(_user$project$Level_SuchDoge$updatePlayer, _p20._0._0, model),
+									_1: _elm_lang$core$Platform_Cmd$none
+								};
+							case 'RoundStep':
+								var _p24 = _p20._0._0;
+								var _p23 = _p20._1._0;
+								var newCmd = _elm_lang$core$Platform_Cmd$batch(
+									A2(
+										_elm_lang$core$List$map,
+										function (_p21) {
+											var _p22 = _p21;
+											return A2(
+												_elm_lang$core$Random$generate,
+												A2(_user$project$Level_SuchDoge$MoveEnemy, _p24, _p22.id),
+												_user$project$Level_SuchDoge$randomVector);
+										},
+										function (_) {
+											return _.enemies;
+										}(
+											_user$project$Level_SuchDoge$roundModel(_p23))));
+								var newRound = A2(
+									_user$project$Level_SuchDoge$mapRound,
+									_user$project$Level_SuchDoge$updateRound(_p24),
+									_p23);
+								var playerModel = A2(_user$project$Level_SuchDoge$updatePlayer, _p24, model);
+								var newModel = _elm_lang$core$Native_Utils.update(
+									playerModel,
+									{
+										step: _user$project$Level_SuchDoge$RoundStep(newRound)
+									});
+								return {ctor: '_Tuple2', _0: newModel, _1: newCmd};
+							default:
+								break _v15_8;
+						}
+					case 'MoveEnemy':
+						if (_p20._1.ctor === 'RoundStep') {
+							var newRound = A2(
+								_user$project$Level_SuchDoge$mapRound,
+								function (round) {
+									return _elm_lang$core$Native_Utils.update(
+										round,
+										{
+											enemies: A2(
+												_elm_lang$core$List$map,
+												function (enemy) {
+													return _elm_lang$core$Native_Utils.eq(enemy.id, _p20._0._1) ? A4(_user$project$Level_SuchDoge$updateEnemyDirection, round.speed, _p20._0._0, _p20._0._2, enemy) : enemy;
+												},
+												round.enemies)
+										});
+								},
+								_p20._1._0);
+							return A2(
+								_user$project$Level_SuchDoge$isLoser,
+								function (_) {
+									return _.enemies;
+								}(
+									_user$project$Level_SuchDoge$roundModel(newRound)),
+								model.player) ? {
+								ctor: '_Tuple2',
+								_0: _elm_lang$core$Native_Utils.update(
+									_user$project$Level_SuchDoge$init,
+									{
+										step: _user$project$Level_SuchDoge$RoundStep(
+											_user$project$Level_SuchDoge$Easy(_user$project$Level_SuchDoge$initEasy))
+									}),
+								_1: _elm_lang$core$Platform_Cmd$none
+							} : {
+								ctor: '_Tuple2',
+								_0: _elm_lang$core$Native_Utils.update(
+									model,
+									{
+										step: _user$project$Level_SuchDoge$RoundStep(newRound)
+									}),
+								_1: _elm_lang$core$Platform_Cmd$none
+							};
+						} else {
+							break _v15_8;
+						}
+					default:
+						if (_p20._1.ctor === 'SpeechStep') {
+							var _p27 = _p20._1._0;
+							var _p25 = A2(
+								_elm_lang$core$Array$get,
+								model.currentSentence,
+								_user$project$Level_SuchDoge$speechText(_p27));
+							if (_p25.ctor === 'Just') {
+								if (_elm_lang$core$Native_Utils.eq(
+									model.currentCharacter,
+									_elm_lang$core$String$length(_p25._0))) {
+									var _p26 = A2(
+										_elm_lang$core$Array$get,
+										model.currentSentence,
+										_user$project$Level_SuchDoge$speechText(_p27));
+									if (_p26.ctor === 'Just') {
+										return {
+											ctor: '_Tuple2',
+											_0: _elm_lang$core$Native_Utils.update(
+												model,
+												{currentSentence: model.currentSentence + 1, currentCharacter: 0}),
+											_1: _elm_lang$core$Platform_Cmd$none
+										};
+									} else {
+										var _v21 = _user$project$Level_SuchDoge$StepForward,
+											_v22 = model;
+										msg = _v21;
+										model = _v22;
+										continue update;
+									}
+								} else {
+									return {
+										ctor: '_Tuple2',
+										_0: _elm_lang$core$Native_Utils.update(
+											model,
+											{currentCharacter: model.currentCharacter + 1}),
+										_1: _elm_lang$core$Platform_Cmd$none
+									};
+								}
+							} else {
+								var _v23 = _user$project$Level_SuchDoge$StepForward,
+									_v24 = model;
+								msg = _v23;
+								model = _v24;
+								continue update;
+							}
+						} else {
+							break _v15_8;
+						}
+				}
+			} while(false);
+			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+		}
+	});
 
 var _user$project$Main$Model = function (a) {
 	return {level: a};
