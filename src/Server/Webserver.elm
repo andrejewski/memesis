@@ -1,10 +1,13 @@
 module Server.Webserver
     exposing
-        ( Context
-        , Request
+        ( Request
         , Response
         , decodeRequest
         , encodeResponse
+        , request
+          -- TEMP (will be port)
+        , respond
+          -- TEMP (will be port)
         )
 
 import Json.Encode as Encode
@@ -12,25 +15,30 @@ import Json.Decode as Decode exposing (Decoder)
 import Dict exposing (Dict)
 
 
-type alias Context =
-    String
-
-
 type alias Request =
     { method : String
     , url : String
     , headers : Dict String String
-    , cookies : Dict String String
+    , body : String
     }
 
 
 type alias Response =
-    { url : String
-    , status : Int
+    { statusCode : Int
+    , statusMessage : Maybe String
     , headers : Dict String String
-    , cookies : Dict String String
     , body : String
     }
+
+
+request : Int -> (String -> Encode.Value -> msg) -> Sub msg
+request httpPort msg =
+    Sub.none
+
+
+respond : String -> Encode.Value -> Cmd msg
+respond ref response =
+    Cmd.none
 
 
 
@@ -52,10 +60,16 @@ encodeStringDict dict =
 encodeResponse : Response -> Encode.Value
 encodeResponse res =
     Encode.object
-        [ ( "url", Encode.string res.url )
-        , ( "status", Encode.int res.status )
+        [ ( "statusCode", Encode.int res.statusCode )
+        , ( "statusMessage"
+          , case res.statusMessage of
+                Just message ->
+                    Encode.string message
+
+                Nothing ->
+                    Encode.null
+          )
         , ( "headers", encodeStringDict res.headers )
-        , ( "cookies", encodeStringDict res.cookies )
         , ( "body", Encode.string res.body )
         ]
 
@@ -71,4 +85,4 @@ decodeRequest =
         (Decode.field "method" Decode.string)
         (Decode.field "url" Decode.string)
         (Decode.field "headers" (Decode.dict Decode.string))
-        (Decode.field "cookies" (Decode.dict Decode.string))
+        (Decode.field "body" Decode.string)

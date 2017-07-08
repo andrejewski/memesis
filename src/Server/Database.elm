@@ -6,13 +6,8 @@ import Json.Encode as Encode exposing (Value)
 import Json.Decode exposing (Decoder)
 
 
-type alias Tag =
-    String
-
-
-
--- port dbResponse : (Tag -> Value -> msg) -> Sub msg
--- port dbRequest : Connection -> Tag -> Value -> Cmd msg
+-- port dbResponse : (Value -> msg) -> Sub msg
+-- port dbRequest : Connection -> Value -> Cmd msg
 
 
 type Action
